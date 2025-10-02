@@ -12,8 +12,7 @@
         CHECK (MinElo < MaxElo),
     MaxElo INT NULL CHECK (MaxElo BETWEEN 0 AND 3000),
 
-    Status NVARCHAR(30) NOT NULL DEFAULT('waiting for players') 
-        CHECK (Status IN ('waiting for players', 'in progress', 'finished')),
+    [Status] int NOT NULL DEFAULT(0),
 
     CurrentRound INT NOT NULL DEFAULT 0,
     WomenOnly BIT NOT NULL DEFAULT 0,

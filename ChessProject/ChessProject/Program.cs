@@ -15,6 +15,8 @@ namespace ChessProject
             builder.Services.AddScoped<UserRepository>();
 
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<TournamentRepository>();
+            builder.Services.AddScoped<TournamentService>();
 
             var app = builder.Build();
 

@@ -1,14 +1,9 @@
 ﻿using ChessProject.DL.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ChessProject.DL.Entities
+namespace ChessProject.Models.Tournament
 {
-    public class Tournament
+    public class TournamentListDto
     {
         public int Id { get; set; }
 
@@ -31,7 +26,7 @@ namespace ChessProject.DL.Entities
         [Range(0, 3000)]
         public int? MaxElo { get; set; }
 
-
+        public string? CategoriesDisplay { get; set; }
         public List<TournamentCategory> Categories { get; set; } = new();
 
         public TournamentStatus Status { get; set; }
