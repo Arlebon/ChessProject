@@ -21,10 +21,15 @@
         <tr>
             <td>@t.Name</td>
             <td>@t.Location</td>
-            <td>@t.CurrentPlayers - @t.MaxPlayers</td>
+            <td>@t.CurrentPlayers / @t.MaxPlayers</td>
             <td>@(t.MinElo?.ToString() ?? "-") - @(t.MaxElo?.ToString() ?? "-")</td>
             <td>@t.Status</td>
-            <td>@t.CategoriesDisplay</td>
+            <td>
+                @foreach (var cat in t.Categories)
+                {
+                    <span class="badge bg-primary me-1">@cat</span>
+                }
+            </td>
             <td>@(t.WomenOnly ? "Yes" : "No")</td>
             <td>@t.RegistrationDeadline.ToString("dd/MM/yyyy")</td>
         </tr>

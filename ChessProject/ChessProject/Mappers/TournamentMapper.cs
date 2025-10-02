@@ -13,7 +13,7 @@ namespace ChessProject.Mappers
                 Id = t.Id,
                 Status = t.Status,
                 Categories = t.Categories,
-                CategoriesDisplay = string.Join(", ", t.Categories.Select(c => c.ToString())),
+                //CategoriesDisplay = string.Join(", ", t.Categories.Select(c => c.ToString())),
                 CurrentRound = t.CurrentRound,
                 Location = t.Location,
                 MaxElo = t.MaxElo,

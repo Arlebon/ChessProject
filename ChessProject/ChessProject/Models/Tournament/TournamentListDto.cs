@@ -28,7 +28,7 @@ namespace ChessProject.Models.Tournament
         [Range(0, 3000)]
         public int? MaxElo { get; set; }
 
-        public string? CategoriesDisplay { get; set; }
+        //public string? CategoriesDisplay { get; set; }
         public List<TournamentCategory> Categories { get; set; } = new();
 
         public TournamentStatus Status { get; set; }

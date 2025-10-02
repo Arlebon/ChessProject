@@ -34,7 +34,7 @@ namespace ChessProject.Controllers
             {
                 return View(tournamentForm);
             }
-
+            Console.WriteLine("Categories received: " + string.Join(", ", tournamentForm.Categories));
             _tournamentService.Add(tournamentForm.ToTournament());
             return RedirectToAction("ListTournament");
         }

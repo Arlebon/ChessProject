@@ -49,34 +49,38 @@ namespace ChessProject.DAL.Repositories
                 // 2. Kategorien nachladen (Reader ist jetzt geschlossen)
                 foreach (var t in tournaments)
                 {
-                    t.Categories = GetCategoriesByTournamentId(t.Id, connection);
+                    t.Categories = GetCategoriesByTournamentId(t.Id);
                 }
             }
 
             return tournaments;
         }
 
-        private List<TournamentCategory> GetCategoriesByTournamentId(int tournamentId, SqlConnection connection)
+        private List<TournamentCategory> GetCategoriesByTournamentId(int tournamentId)
         {
             var categories = new List<TournamentCategory>();
 
-            using (var cmd = new SqlCommand(
-                @"SELECT CategoryId 
-                  FROM TournamentCategory
-                  WHERE TournamentId = @TournamentId", connection))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
             {
-                cmd.Parameters.AddWithValue("@TournamentId", tournamentId);
-
-                using (var reader = cmd.ExecuteReader())
+                command.CommandText = @"SELECT CategoryId 
+                  FROM TournamentCategory
+                  WHERE TournamentId = @TournamentId";
                 {
-                    while (reader.Read())
+                    command.Parameters.AddWithValue("@TournamentId", tournamentId);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        categories.Add((TournamentCategory)(int)reader["CategoryId"]);
+                        while (reader.Read())
+                        {
+                            categories.Add((TournamentCategory)Convert.ToInt32(reader["CategoryId"]));
+                        }
                     }
                 }
-            }
 
-            return categories;
+                return categories;
+            }
         }
 
         public void Add(Tournament tournament)
@@ -100,7 +104,7 @@ namespace ChessProject.DAL.Repositories
                     command.Parameters.AddWithValue("@maxplayers", tournament.MaxPlayers);
                     command.Parameters.AddWithValue("@minelo", (object?)tournament.MinElo ?? DBNull.Value);
                     command.Parameters.AddWithValue("@maxelo", (object?)tournament.MaxElo ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@status", tournament.Status.ToString());
+                    command.Parameters.AddWithValue("@status", (int)tournament.Status);
                     command.Parameters.AddWithValue("@currentround", tournament.CurrentRound);
                     command.Parameters.AddWithValue("@womenonly", tournament.WomenOnly);
                     command.Parameters.AddWithValue("@registrationdeadline", tournament.RegistrationDeadline);
