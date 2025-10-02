@@ -32,10 +32,30 @@ namespace ChessProject.BLL.Services
 
             user.Role = Role.User;
 
-            user.Password = user.UserName.Substring(0, 3) + "1234";
+            user.Password = user.UserName.Substring(0, 3).ToLower() + "1234";
             user.Password = Argon2.Hash(user.Password);
 
+            if (user.ELO == null)
+            {
+                user.ELO = 1200;
+            }
+
             _userRepository.Add(user);
+        }
+
+        public User Login(string login, string password)
+        {
+            User? user = _userRepository.GetUserByLogin(login);
+
+            if (user == null)
+            {
+                throw new Exception("User doesn't exist");
+            }
+            if (!Argon2.Verify(user.Password, password))
+            {
+                throw new Exception("Wrong password");
+            }
+            return user;
         }
     }
 }

@@ -1,5 +1,6 @@
 using ChessProject.BLL.Services;
 using ChessProject.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ChessProject
 {
@@ -11,6 +12,14 @@ namespace ChessProject
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/User/Login";
+                    options.LogoutPath = "/User/Logout";
+                    options.AccessDeniedPath = "/Home/Index";
+                });
 
             builder.Services.AddScoped<UserRepository>();
 
@@ -30,6 +39,8 @@ namespace ChessProject
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
