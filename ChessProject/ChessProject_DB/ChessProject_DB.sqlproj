@@ -62,6 +62,7 @@
     <Build Include="Tables\User.sql" />
     <Build Include="Tables\Tournament.sql" />
     <Build Include="Tables\TournamentCategory.sql" />
+    <Build Include="Tables\Category.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ChessProject_DB.publish.xml" />

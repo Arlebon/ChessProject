@@ -19,7 +19,6 @@
 
     RegistrationDeadline DATE NOT NULL,
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-    UpdatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-    CONSTRAINT CK_Tournament_Deadline CHECK 
-        (RegistrationDeadline > DATEADD(DAY, MinPlayers, CreatedAt))
+    UpdatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME()
+        
 )

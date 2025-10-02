@@ -8,8 +8,8 @@ namespace ChessProject.DL.Enums
 {
     public enum TournamentCategory
     {
-        Junior,
-        Senior,
-        Veteran,
+        Junior = 1,
+        Senior = 2,
+        Veteran = 3,
     }
 }

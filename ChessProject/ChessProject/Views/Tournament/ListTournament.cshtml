@@ -11,7 +11,6 @@
             <th>Elo Range</th>
             <th>Status</th>
             <th>Categories</th>
-            <th>Round</th>
             <th>Women Only</th>
             <th>Deadline</th>
         </tr>
@@ -22,14 +21,15 @@
         <tr>
             <td>@t.Name</td>
             <td>@t.Location</td>
-            <td>@t.MinPlayers - @t.MaxPlayers</td>
+            <td>@t.CurrentPlayers - @t.MaxPlayers</td>
             <td>@(t.MinElo?.ToString() ?? "-") - @(t.MaxElo?.ToString() ?? "-")</td>
             <td>@t.Status</td>
             <td>@t.CategoriesDisplay</td>
-            <td>@t.CurrentRound</td>
             <td>@(t.WomenOnly ? "Yes" : "No")</td>
             <td>@t.RegistrationDeadline.ToString("dd/MM/yyyy")</td>
         </tr>
     }
     </tbody>
 </table>
+<a class="btn btn-primary" asp-action="CreateTournament" asp-controller="Tournament">Create new Tournemanet</a>
+

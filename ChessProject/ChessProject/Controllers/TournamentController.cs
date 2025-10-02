@@ -20,6 +20,24 @@ namespace ChessProject.Controllers
             List<TournamentListDto> tournamentListDtos = [.. _tournamentService.GetAll().Select(t => t.ToTournamentListDto())];
             return View(tournamentListDtos);
         }
+
+        [HttpGet]
+        public IActionResult CreateTournament()
+        {
+            return View(new TournamentFormDto());
+        }
+
+        [HttpPost]
+        public IActionResult CreateTournament([FromForm] TournamentFormDto tournamentForm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(tournamentForm);
+            }
+
+            _tournamentService.Add(tournamentForm.ToTournament());
+            return RedirectToAction("ListTournament");
+        }
     }
 
 }

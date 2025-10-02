@@ -3,6 +3,7 @@ using ChessProject.DL.Enums;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ChessProject.DAL.Repositories
 {
@@ -13,49 +14,49 @@ namespace ChessProject.DAL.Repositories
 
         public List<Tournament> GetAll()
         {
+            var tournaments = new List<Tournament>();
+
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
             {
                 command.CommandText = @"SELECT * FROM Tournament";
-
                 connection.Open();
+
+                // 1. Turniere ohne Kategorien lesen
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    List<Tournament> tournaments = new List<Tournament>();
                     while (reader.Read())
                     {
-                        tournaments.Add(MapTournament(reader, connection));
+                        tournaments.Add(new Tournament()
+                        {
+                            Id = (int)reader["Id"],
+                            Name = (string)reader["Name"],
+                            Location = reader["Location"] as string,
+                            MinPlayers = (int)reader["MinPlayers"],
+                            MaxPlayers = (int)reader["MaxPlayers"],
+                            MinElo = reader["MinElo"] as int?,
+                            MaxElo = reader["MaxElo"] as int?,
+                            Status = (TournamentStatus)Convert.ToInt32(reader["Status"]),
+                            CurrentRound = (int)reader["CurrentRound"],
+                            WomenOnly = (bool)reader["WomenOnly"],
+                            RegistrationDeadline = (DateTime)reader["RegistrationDeadline"],
+                            CreatedAt = (DateTime)reader["CreatedAt"],
+                            UpdatedAt = (DateTime)reader["UpdatedAt"]
+                        });
                     }
+                }
 
-                    return tournaments;
+                // 2. Kategorien nachladen (Reader ist jetzt geschlossen)
+                foreach (var t in tournaments)
+                {
+                    t.Categories = GetCategoriesByTournamentId(t.Id, connection);
                 }
             }
+
+            return tournaments;
         }
 
-        private Tournament MapTournament(SqlDataReader reader, SqlConnection connection)
-        {
-            int tournamentId = (int)reader["Id"];
-
-            return new Tournament()
-            {
-                Id = tournamentId,
-                Name = (string)reader["Name"],
-                Location = reader["Location"] as string,
-                MinPlayers = (int)reader["MinPlayers"],
-                MaxPlayers = (int)reader["MaxPlayers"],
-                MinElo = reader["MinElo"] as int?,
-                MaxElo = reader["MaxElo"] as int?,
-                CurrentRound = (int)reader["CurrentRound"],
-                WomenOnly = (bool)reader["WomenOnly"],
-                RegistrationDeadline = (DateTime)reader["RegistrationDeadline"],
-                CreatedAt = (DateTime)reader["CreatedAt"],
-                UpdatedAt = (DateTime)reader["UpdatedAt"],
-
-                Categories = GetCategoriesByTournamentId(tournamentId, connection)
-            };
-        }
-
-        public List<TournamentCategory> GetCategoriesByTournamentId(int tournamentId, SqlConnection connection)
+        private List<TournamentCategory> GetCategoriesByTournamentId(int tournamentId, SqlConnection connection)
         {
             var categories = new List<TournamentCategory>();
 
@@ -84,6 +85,7 @@ namespace ChessProject.DAL.Repositories
             {
                 connection.Open();
 
+                // 1. Turnier speichern
                 using (SqlCommand command = connection.CreateCommand())
                 {
                     command.CommandText = @"INSERT INTO [Tournament]
@@ -98,14 +100,15 @@ namespace ChessProject.DAL.Repositories
                     command.Parameters.AddWithValue("@maxplayers", tournament.MaxPlayers);
                     command.Parameters.AddWithValue("@minelo", (object?)tournament.MinElo ?? DBNull.Value);
                     command.Parameters.AddWithValue("@maxelo", (object?)tournament.MaxElo ?? DBNull.Value);
-                    command.Parameters.AddWithValue("@status", tournament.Status);
+                    command.Parameters.AddWithValue("@status", tournament.Status.ToString());
                     command.Parameters.AddWithValue("@currentround", tournament.CurrentRound);
                     command.Parameters.AddWithValue("@womenonly", tournament.WomenOnly);
                     command.Parameters.AddWithValue("@registrationdeadline", tournament.RegistrationDeadline);
 
-                    
                     tournament.Id = (int)command.ExecuteScalar();
                 }
+
+                // 2. Kategorien speichern
                 if (tournament.Categories != null && tournament.Categories.Any())
                 {
                     foreach (var category in tournament.Categories)
@@ -113,8 +116,8 @@ namespace ChessProject.DAL.Repositories
                         using (SqlCommand categoryCmd = connection.CreateCommand())
                         {
                             categoryCmd.CommandText = @"
-                        INSERT INTO TournamentCategory (TournamentId, CategoryId)
-                        VALUES (@tournamentId, @categoryId)";
+                                INSERT INTO TournamentCategory (TournamentId, CategoryId)
+                                VALUES (@tournamentId, @categoryId)";
 
                             categoryCmd.Parameters.AddWithValue("@tournamentId", tournament.Id);
                             categoryCmd.Parameters.AddWithValue("@categoryId", (int)category);
@@ -123,8 +126,6 @@ namespace ChessProject.DAL.Repositories
                         }
                     }
                 }
-
-                connection.Close();
             }
         }
     }

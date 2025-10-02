@@ -20,5 +20,10 @@ namespace ChessProject.BLL.Services
         {
             return _tournamentRepository.GetAll();
         }
+
+        public void Add(Tournament t)
+        {
+            _tournamentRepository.Add(t);
+        }
     }
 }
