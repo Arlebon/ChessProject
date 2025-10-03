@@ -1,0 +1,29 @@
+﻿@using ChessProject.Models.User
+@model UserLoginFormDTO
+
+<h1>Login</h1>
+<hr />
+<form asp-controller="User" asp-action="Login" method="post">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="row justify-content-around">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label asp-for="Login" class="control-label m-2"></label>
+				<input asp-for="Login" class="form-control" />
+				<span asp-validation-for="Login" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label asp-for="Password" class="control-label m-2"></label>
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-md-6 d-flex justify-content-center">
+			<button type="submit" class="btn btn-primary mt-2">Login</button>
+		</div>
+	</div>
+</form>

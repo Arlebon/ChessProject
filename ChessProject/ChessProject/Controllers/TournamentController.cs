@@ -3,6 +3,7 @@ using ChessProject.DL.Entities;
 using ChessProject.DL.Enums;
 using ChessProject.Mappers;
 using ChessProject.Models.Tournament;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChessProject.Controllers
@@ -23,12 +24,14 @@ namespace ChessProject.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateTournament()
         {
             return View(new TournamentFormDto());
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateTournament([FromForm] TournamentFormDto tournamentForm)
         {
             if (!ModelState.IsValid)

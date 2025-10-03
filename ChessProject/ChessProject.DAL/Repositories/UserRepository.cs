@@ -1,4 +1,5 @@
 ﻿using ChessProject.DL.Entities;
+using ChessProject.DL.Enums;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -63,13 +64,51 @@ namespace ChessProject.DAL.Repositories
                 cmd.CommandText = @"SELECT COUNT(*) FROM [User]
                                     WHERE Email = @email;";
 
-                cmd.Parameters.AddWithValue("@userName", email);
+                cmd.Parameters.AddWithValue("@email", email);
 
                 connection.Open();
 
                 count = (int)cmd.ExecuteScalar();
             }
             return count != 0;
+        }
+
+        public User? GetUserByLogin(string login)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT * FROM [User]
+                                    WHERE Email = @login OR Username = @login;";
+
+                cmd.Parameters.AddWithValue("@login", login);
+
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+                    return MapEntity(reader);
+                }
+            }
+        }
+
+        public User MapEntity(SqlDataReader reader)
+        {
+            return new User()
+            {
+                Id = (int)reader["Id"],
+                UserName = (string)reader["Username"],
+                Email = (string)reader["Email"],
+                Password = (string)reader["Password"],
+                BirthDate = DateOnly.FromDateTime((DateTime)reader["BirthDate"]),
+                Gender = Enum.Parse<Gender>((string)reader["Gender"]),
+                ELO = (int)reader["ELO"],
+                Role = Enum.Parse<Role>((string)reader["Role"]),
+            };
         }
     }
 }

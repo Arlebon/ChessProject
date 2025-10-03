@@ -19,7 +19,6 @@ namespace ChessProject
                     options.LoginPath = "/User/Login";
                     options.LogoutPath = "/User/Logout";
                     options.AccessDeniedPath = "/Home/Index"; // Ajouter une page accès déniée
-                    
                 });
 
             builder.Services.AddScoped<UserRepository>();
@@ -42,6 +41,8 @@ namespace ChessProject
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
