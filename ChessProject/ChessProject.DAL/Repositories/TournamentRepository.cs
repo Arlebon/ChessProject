@@ -147,6 +147,21 @@ namespace ChessProject.DAL.Repositories
             }
         }
 
+
+        public bool DeleteTournamentById(int tournamentId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "DELETE FROM Tournament WHERE [Id] = @id";
+
+                command.Parameters.AddWithValue("id", tournamentId);
+                connection.Open();
+
+                int deleted = command.ExecuteNonQuery();
+                return deleted > 0;
+            }
+        }
         public Tournament MapEntity(SqlDataReader reader)
         {
             return new Tournament()
@@ -168,3 +183,4 @@ namespace ChessProject.DAL.Repositories
         }
     }
 }
+        

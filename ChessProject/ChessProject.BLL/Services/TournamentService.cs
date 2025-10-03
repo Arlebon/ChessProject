@@ -26,6 +26,11 @@ namespace ChessProject.BLL.Services
             _tournamentRepository.Add(t);
         }
 
+        public bool DeleteTournamentById(int id)
+        {
+           return _tournamentRepository.DeleteTournamentById(id);
+        }
+
         public Tournament GetOneById(int id)
         {
             Tournament? tournament = _tournamentRepository.GetOneById(id);
