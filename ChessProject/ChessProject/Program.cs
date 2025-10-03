@@ -1,5 +1,6 @@
 using ChessProject.BLL.Services;
 using ChessProject.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ChessProject
 {

@@ -25,5 +25,10 @@ namespace ChessProject.BLL.Services
         {
             _tournamentRepository.Add(t);
         }
+
+        public bool DeleteTournamentById(int id)
+        {
+           return _tournamentRepository.DeleteTournamentById(id);
+        }
     }
 }
