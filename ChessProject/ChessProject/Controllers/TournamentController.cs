@@ -41,6 +41,20 @@ namespace ChessProject.Controllers
             _tournamentService.Add(tournamentForm.ToTournament());
             return RedirectToAction("ListTournament");
         }
+
+        [HttpGet("/Tournament/Details/{id}")]
+        public IActionResult Details([FromRoute] int id)
+        {
+            try
+            {
+                Tournament? tournament = _tournamentService.GetOneById(id);
+                return View(tournament.ToTournamentDetailsDTO());
+            }
+            catch
+            {
+                return RedirectToAction("ListTournament", "Tournament");
+            }
+        }
     }
 
 }

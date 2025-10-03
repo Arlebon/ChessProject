@@ -7,10 +7,12 @@ namespace ChessProject.Models.User
     public class UserRegisterFormDTO
     {
         [Required(ErrorMessage = "Field required")]
+        [MaxLength(50)]
         [DisplayName("Username")]
         public string UserName { get; set; } = null!;
 
         [Required(ErrorMessage = "Field required")]
+        [MaxLength(255)]
         [DisplayName("Email")]
         public string Email { get; set; } = null!;
 

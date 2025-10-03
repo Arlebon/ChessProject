@@ -25,5 +25,17 @@ namespace ChessProject.BLL.Services
         {
             _tournamentRepository.Add(t);
         }
+
+        public Tournament GetOneById(int id)
+        {
+            Tournament? tournament = _tournamentRepository.GetOneById(id);
+
+            if (tournament == null)
+            {
+                throw new Exception("This tournament doesn't exist");
+            }
+
+            return tournament;
+        }
     }
 }

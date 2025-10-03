@@ -47,5 +47,26 @@ namespace ChessProject.Mappers
                 CurrentRound = 0,
             };
         }
+
+        public static TournamentDetailsDTO ToTournamentDetailsDTO(this Tournament t)
+        {
+            return new TournamentDetailsDTO()
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Location = t.Location,
+                MinPlayers = t.MinPlayers,
+                MaxPlayers = t.MaxPlayers,
+                MinElo = t.MinElo,
+                MaxElo = t.MaxElo,
+                Categories = t.Categories,
+                Status = t.Status,
+                CurrentRound = t.CurrentRound,
+                WomenOnly = t.WomenOnly,
+                RegistrationDeadline = t.RegistrationDeadline,
+                CreatedAt = t.CreatedAt,
+                UpdatedAt = t.UpdatedAt,
+            };
+        }
     }
 }

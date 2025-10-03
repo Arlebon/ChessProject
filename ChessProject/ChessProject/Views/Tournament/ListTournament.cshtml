@@ -15,6 +15,7 @@
             <th>Categories</th>
             <th>Women Only</th>
             <th>Deadline</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +35,9 @@
             </td>
             <td>@(t.WomenOnly ? "Yes" : "No")</td>
             <td>@t.RegistrationDeadline.ToString("dd/MM/yyyy")</td>
+            <td>
+                <a class="btn btn-primary" asp-controller="Tournament" asp-action="Details" asp-route-id="@t.Id">Details</a>
+            </td>
         </tr>
     }
     </tbody>

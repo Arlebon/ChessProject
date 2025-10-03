@@ -27,22 +27,7 @@ namespace ChessProject.DAL.Repositories
                 {
                     while (reader.Read())
                     {
-                        tournaments.Add(new Tournament()
-                        {
-                            Id = (int)reader["Id"],
-                            Name = (string)reader["Name"],
-                            Location = reader["Location"] as string,
-                            MinPlayers = (int)reader["MinPlayers"],
-                            MaxPlayers = (int)reader["MaxPlayers"],
-                            MinElo = reader["MinElo"] as int?,
-                            MaxElo = reader["MaxElo"] as int?,
-                            Status = (TournamentStatus)Convert.ToInt32(reader["Status"]),
-                            CurrentRound = (int)reader["CurrentRound"],
-                            WomenOnly = (bool)reader["WomenOnly"],
-                            RegistrationDeadline = (DateTime)reader["RegistrationDeadline"],
-                            CreatedAt = (DateTime)reader["CreatedAt"],
-                            UpdatedAt = (DateTime)reader["UpdatedAt"]
-                        });
+                        tournaments.Add(MapEntity(reader));
                     }
                 }
 
@@ -131,6 +116,55 @@ namespace ChessProject.DAL.Repositories
                     }
                 }
             }
+        }
+
+        public Tournament? GetOneById(int id)
+        {
+            Tournament tournament = new Tournament();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT t.Id, t.Name, t.Location, t.MinPlayers, t.MaxPlayers, t.MinElo, t.MaxElo, t.Status, t.CurrentRound, t.WomenOnly, t.RegistrationDeadline, t.CreatedAt, t.UpdatedAt 
+                                    FROM Tournament t
+                                    WHERE t.Id = @id";
+
+                cmd.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+                    tournament = MapEntity(reader);
+                }
+                tournament.Categories = GetCategoriesByTournamentId(tournament.Id);
+
+                return tournament;
+            }
+        }
+
+        public Tournament MapEntity(SqlDataReader reader)
+        {
+            return new Tournament()
+            {
+                Id = (int)reader["Id"],
+                Name = (string)reader["Name"],
+                Location = reader["Location"] as string,
+                MinPlayers = (int)reader["MinPlayers"],
+                MaxPlayers = (int)reader["MaxPlayers"],
+                MinElo = reader["MinElo"] as int?,
+                MaxElo = reader["MaxElo"] as int?,
+                Status = (TournamentStatus)Convert.ToInt32(reader["Status"]),
+                CurrentRound = (int)reader["CurrentRound"],
+                WomenOnly = (bool)reader["WomenOnly"],
+                RegistrationDeadline = (DateTime)reader["RegistrationDeadline"],
+                CreatedAt = (DateTime)reader["CreatedAt"],
+                UpdatedAt = (DateTime)reader["UpdatedAt"]
+            };
         }
     }
 }

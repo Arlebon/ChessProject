@@ -6,6 +6,7 @@ namespace ChessProject.Models.User
     public class UserLoginFormDTO
     {
         [Required(ErrorMessage = "Field required")]
+        [MaxLength(255)]
         [DisplayName("Email or username")]
         public string Login { get; set; } = null!;
 
