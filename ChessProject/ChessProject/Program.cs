@@ -12,6 +12,15 @@ namespace ChessProject
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/User/Login";
+                    options.LogoutPath = "/User/Logout";
+                    options.AccessDeniedPath = "/Home/Index"; // Ajouter une page accès déniée
+                    
+                });
+
             builder.Services.AddScoped<UserRepository>();
 
             builder.Services.AddScoped<UserService>();
