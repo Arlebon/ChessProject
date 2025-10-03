@@ -1,0 +1,40 @@
+﻿@model List<ChessProject.Models.Tournament.TournamentListDto>
+
+<h1>Tournaments</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Players</th>
+            <th>Elo Range</th>
+            <th>Status</th>
+            <th>Categories</th>
+            <th>Women Only</th>
+            <th>Deadline</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var t in Model)
+    {
+        <tr>
+            <td>@t.Name</td>
+            <td>@t.Location</td>
+            <td>@t.CurrentPlayers / @t.MaxPlayers</td>
+            <td>@(t.MinElo?.ToString() ?? "-") - @(t.MaxElo?.ToString() ?? "-")</td>
+            <td>@t.Status</td>
+            <td>
+                @foreach (var cat in t.Categories)
+                {
+                    <span class="badge bg-primary me-1">@cat</span>
+                }
+            </td>
+            <td>@(t.WomenOnly ? "Yes" : "No")</td>
+            <td>@t.RegistrationDeadline.ToString("dd/MM/yyyy")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+<a class="btn btn-primary" asp-action="CreateTournament" asp-controller="Tournament">Create new Tournemanet</a>
+
