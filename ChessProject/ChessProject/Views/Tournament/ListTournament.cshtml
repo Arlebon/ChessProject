@@ -1,4 +1,6 @@
-﻿@model List<ChessProject.Models.Tournament.TournamentListDto>
+﻿@using ChessProject.DL.Enums
+@using ChessProject.Extensions
+@model List<ChessProject.Models.Tournament.TournamentListDto>
 
 <h1>Tournaments</h1>
 
@@ -36,5 +38,8 @@
     }
     </tbody>
 </table>
-<a class="btn btn-primary" asp-action="CreateTournament" asp-controller="Tournament">Create new Tournemanet</a>
+@if (User.IsConnected() && User.GetRole() == Role.Admin)
+{
+    <a class="btn btn-primary" asp-action="CreateTournament" asp-controller="Tournament">Create new Tournament</a>
+}
 
