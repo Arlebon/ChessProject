@@ -43,7 +43,7 @@
             </td>
             <td>@(t.WomenOnly ? "Yes" : "No")</td>
             <td>@t.RegistrationDeadline.ToString("dd/MM/yyyy")</td>
-                <td>@if (User.IsConnected() && User.GetRole() == Role.Admin)
+            @*     <td>@if (User.IsConnected() && User.GetRole() == Role.Admin)
                     {
                         @if (t.Status == TournamentStatus.WaitingForPlayers)
                         {
@@ -54,7 +54,7 @@
                             </form>
                         }
                     }
-            </td>
+            </td> *@
         </tr>
     }
     </tbody>
