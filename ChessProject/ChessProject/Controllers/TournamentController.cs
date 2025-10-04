@@ -58,6 +58,22 @@ namespace ChessProject.Controllers
             return RedirectToAction("ListTournament");
         }
 
+        [HttpPost]
+        public IActionResult StartTournament([FromRoute] int id)
+        {
+            try
+            {
+
+                _tournamentService.StartTournament(id);
+                return RedirectToAction("ListTournament");
+            }
+            catch (Exception ex)
+            {
+                ViewData["Message"] = ex.Message;
+                return RedirectToAction("ListTournament");
+            }
+        }
+
         [HttpGet("/Tournament/Details/{id}")]
         public IActionResult Details([FromRoute] int id)
         {

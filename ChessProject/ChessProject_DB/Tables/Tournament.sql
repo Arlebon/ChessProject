@@ -8,6 +8,8 @@
         CHECK (MinPlayers < MaxPlayers),
     MaxPlayers INT NOT NULL CHECK (MaxPlayers BETWEEN 2 AND 32),
 
+    CurrentPlayers INT CHECK (CurrentPlayers < MaxPlayers),
+
     MinElo INT NULL CHECK (MinElo BETWEEN 0 AND 3000)
         CHECK (MinElo < MaxElo),
     MaxElo INT NULL CHECK (MaxElo BETWEEN 0 AND 3000),

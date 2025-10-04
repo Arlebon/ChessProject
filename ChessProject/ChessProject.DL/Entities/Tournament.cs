@@ -10,6 +10,8 @@ namespace ChessProject.DL.Entities
 {
     public class Tournament
     {
+        public int CurrentPlayers {  get; set; }
+
         public int Id { get; set; }
 
         [Required]

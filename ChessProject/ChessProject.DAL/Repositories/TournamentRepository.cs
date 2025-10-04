@@ -159,6 +159,8 @@ namespace ChessProject.DAL.Repositories
                 connection.Open();
 
                 int deleted = command.ExecuteNonQuery();
+                connection.Close();
+
                 return deleted > 0;
             }
         }
@@ -180,6 +182,67 @@ namespace ChessProject.DAL.Repositories
                 CreatedAt = (DateTime)reader["CreatedAt"],
                 UpdatedAt = (DateTime)reader["UpdatedAt"]
             };
+        }
+
+        public void StartTournament(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @"UPDATE Tournament
+                                        SET Status = @status, CurrentRound = 1, UpdatedAt = SYSDATETIME()
+                                        WHERE ID = @id;";
+                command.Parameters.AddWithValue("id", id);
+                command.Parameters.AddWithValue("status", (int)TournamentStatus.InProgress);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public List<int> GetUserIdsForTournament(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                // Je recupère la liste des joueurs inscrit dans un tournois
+                List<int> userIds = new List<int>();
+
+                command.CommandText = @"SELECT UserId FROM TournamentUser
+                                        WHERE TournamentId = @id;";
+                command.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        userIds.Add((int)reader["UserId"]);
+                    }
+                }
+                return userIds;
+            }
+        }
+
+        public void CreateEncounter(int tournamentId, int id1, int id2, int round)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand command = connection.CreateCommand())
+            {
+                command.CommandText = @"INSERT INTO Encounter (TournamentId, PlyrWhiteId, PlyrBlackId, Round)
+                                        VALUES (@tournamentId, @whiteId, @blackId, @round);";
+                command.Parameters.AddWithValue("@tournamentId", tournamentId);
+                command.Parameters.AddWithValue("@whiteId", id1);
+                command.Parameters.AddWithValue("@blackId", id2);
+                command.Parameters.AddWithValue("@round", round);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+                connection.Close();
+
+            }
         }
     }
 }
