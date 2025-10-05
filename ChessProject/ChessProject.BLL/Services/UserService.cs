@@ -57,5 +57,16 @@ namespace ChessProject.BLL.Services
             }
             return user;
         }
+
+        public User GetById(int id)
+        {
+            User? user = _userRepository.GetUserById(id);
+
+            if(user == null)
+            {
+                throw new Exception("User doesn't exist");
+            }
+            return user;
+        }
     }
 }

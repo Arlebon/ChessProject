@@ -96,6 +96,29 @@ namespace ChessProject.DAL.Repositories
             }
         }
 
+        public User? GetUserById(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT * FROM [User]
+                                    WHERE Id = @id;";
+
+                cmd.Parameters.AddWithValue("@id", id);
+
+                connection.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+                    return MapEntity(reader);
+                }
+            }
+        }
+
         public User MapEntity(SqlDataReader reader)
         {
             return new User()

@@ -1,5 +1,7 @@
 ﻿CREATE TABLE [dbo].[Category]
 (
 	[Id] INT NOT NULL PRIMARY KEY,
-	[Name] NVARCHAR(255)
+	[Name] NVARCHAR(255),
+	MinAge INT NOT NULL,
+	MaxAge INT NOT NULL
 )

@@ -11,6 +11,12 @@ namespace ChessProject.DAL.Repositories
     {
         private readonly string _connectionString =
             "Server=(localdb)\\MSSQLLocalDB;Database=ChessProject.DB;Trusted_Connection=True;";
+        private readonly CategoryRepository _categoryRepository;
+
+        public TournamentRepository(CategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
 
         public List<Tournament> GetAll()
         {
@@ -41,9 +47,9 @@ namespace ChessProject.DAL.Repositories
             return tournaments;
         }
 
-        private List<TournamentCategory> GetCategoriesByTournamentId(int tournamentId)
+        private List<Category> GetCategoriesByTournamentId(int tournamentId)
         {
-            var categories = new List<TournamentCategory>();
+            var categories = new List<Category>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             using (SqlCommand command = connection.CreateCommand())
@@ -59,7 +65,7 @@ namespace ChessProject.DAL.Repositories
                     {
                         while (reader.Read())
                         {
-                            categories.Add((TournamentCategory)Convert.ToInt32(reader["CategoryId"]));
+                            categories.Add(_categoryRepository.GetById((int)reader["CategoryId"])!);
                         }
                     }
                 }
@@ -109,7 +115,7 @@ namespace ChessProject.DAL.Repositories
                                 VALUES (@tournamentId, @categoryId)";
 
                             categoryCmd.Parameters.AddWithValue("@tournamentId", tournament.Id);
-                            categoryCmd.Parameters.AddWithValue("@categoryId", (int)category);
+                            categoryCmd.Parameters.AddWithValue("@categoryId", category.Id);
 
                             categoryCmd.ExecuteNonQuery();
                         }
@@ -162,6 +168,61 @@ namespace ChessProject.DAL.Repositories
                 return deleted > 0;
             }
         }
+
+        public bool AddUserToTournament(int tournamentId, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"INSERT INTO TournamentUser
+                                    VALUES (@tournamentId, @userId);";
+
+                cmd.Parameters.AddWithValue("@tournamentId", tournamentId);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                connection.Open();
+
+                int added = cmd.ExecuteNonQuery();
+
+                return added > 0;
+            }
+        }
+
+        public bool UserExistInTournament(int tournamentId, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT COUNT(*)
+                                    FROM TournamentUser
+                                    WHERE TournamentId = @tournamentId AND UserId = @userId;";
+
+                cmd.Parameters.AddWithValue("@tournamentId", tournamentId);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                connection.Open();
+
+                return (int)cmd.ExecuteScalar() > 0;
+            }
+        }
+
+        public int GetNumberOfUserInTournament(int tournamentId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT COUNT(*)
+                                    FROM TournamentUser
+                                    WHERE TournamentId = @tournamentId;";
+
+                cmd.Parameters.AddWithValue("@tournamentId", tournamentId);
+
+                connection.Open();
+
+                return (int)cmd.ExecuteScalar();
+            }
+        }
+
         public Tournament MapEntity(SqlDataReader reader)
         {
             return new Tournament()

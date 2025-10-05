@@ -22,10 +22,12 @@ namespace ChessProject
                 });
 
             builder.Services.AddScoped<UserRepository>();
+            builder.Services.AddScoped<TournamentRepository>();
+            builder.Services.AddScoped<CategoryRepository>();
 
             builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<TournamentRepository>();
             builder.Services.AddScoped<TournamentService>();
+            builder.Services.AddScoped<CategoryService>();
 
             var app = builder.Build();
 
