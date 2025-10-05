@@ -14,5 +14,10 @@ namespace ChessProject.Extensions
         {
             return Enum.Parse<Role>(claims.FindFirst(ClaimTypes.Role)!.Value);
         }
+
+        public static int GetId(this ClaimsPrincipal claims)
+        {
+            return Convert.ToInt32((claims.FindFirst(ClaimTypes.Sid)!.Value));
+        }
     }
 }

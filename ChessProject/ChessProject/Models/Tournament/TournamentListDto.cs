@@ -1,4 +1,5 @@
-﻿using ChessProject.DL.Enums;
+﻿using ChessProject.DL.Entities;
+using ChessProject.DL.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChessProject.Models.Tournament
@@ -29,7 +30,7 @@ namespace ChessProject.Models.Tournament
         public int? MaxElo { get; set; }
 
         //public string? CategoriesDisplay { get; set; }
-        public List<TournamentCategory> Categories { get; set; } = new();
+        public List<Category> Categories { get; set; } = new();
 
         public TournamentStatus Status { get; set; }
 

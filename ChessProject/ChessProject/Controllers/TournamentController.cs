@@ -1,6 +1,7 @@
 ﻿using ChessProject.BLL.Services;
 using ChessProject.DL.Entities;
 using ChessProject.DL.Enums;
+using ChessProject.Extensions;
 using ChessProject.Mappers;
 using ChessProject.Models.Tournament;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +12,11 @@ namespace ChessProject.Controllers
     public class TournamentController : Controller
     {
         private readonly TournamentService _tournamentService;
-        public TournamentController(TournamentService tournamentService)
+        private readonly CategoryService _categoryService;
+        public TournamentController(TournamentService tournamentService, CategoryService categoryService)
         {
             _tournamentService = tournamentService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -27,7 +30,11 @@ namespace ChessProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult CreateTournament()
         {
-            return View(new TournamentFormDto());
+            TournamentFormDto form = new TournamentFormDto();
+
+            form.AvailableCategories = _categoryService.GetAllCategories();
+
+            return View(form);
         }
 
         [HttpPost]
@@ -85,6 +92,24 @@ namespace ChessProject.Controllers
             catch
             {
                 return RedirectToAction("ListTournament", "Tournament");
+            }
+        }
+
+        [HttpPost("/Tournament/Enter/{id}")]
+        [Authorize]
+        public IActionResult EnterTournament([FromRoute] int id)
+        {
+            try
+            {
+                _tournamentService.AddUserToTournament(id, User.GetId());
+
+                return RedirectToAction("Details", "Tournament", new { id });
+            }
+            catch (Exception ex)
+            {
+                TempData["RegistrationError"] = ex.Message;
+
+                return RedirectToAction("Details", "Tournament", new { id });
             }
         }
     }

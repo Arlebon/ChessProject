@@ -39,7 +39,7 @@
             <td> 
                 @foreach (var cat in t.Categories)
                 {
-                    <span class="badge bg-primary me-1">@cat</span>
+                    <span class="badge bg-primary me-1">@cat.Name</span>
                 }
             </td>
             <td>@(t.WomenOnly ? "Yes" : "No")</td>

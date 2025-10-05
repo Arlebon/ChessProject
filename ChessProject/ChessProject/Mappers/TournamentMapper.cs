@@ -1,4 +1,5 @@
-﻿using ChessProject.DL.Entities;
+﻿using ChessProject.BLL.Services;
+using ChessProject.DL.Entities;
 using ChessProject.DL.Enums;
 using ChessProject.Models.Tournament;
 
@@ -20,6 +21,7 @@ namespace ChessProject.Mappers
                 MinElo = t.MinElo,
                 MaxPlayers = t.MaxPlayers,
                 MinPlayers = t.MinPlayers,
+                CurrentPlayers = t.CurrentPlayers,
                 Name = t.Name,
                 RegistrationDeadline = t.RegistrationDeadline,
                 WomenOnly = t.WomenOnly,
@@ -31,7 +33,7 @@ namespace ChessProject.Mappers
             return new Tournament()
             {
                 Name=form.Name,
-                Categories= form.Categories,
+                CategoryId = form.Categories,
                 Location =form.Location,
                 MinElo=form.MinElo,
                 MaxElo=form.MaxElo,

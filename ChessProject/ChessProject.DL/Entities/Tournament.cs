@@ -10,8 +10,6 @@ namespace ChessProject.DL.Entities
 {
     public class Tournament
     {
-        public int CurrentPlayers {  get; set; }
-
         public int Id { get; set; }
 
         [Required]
@@ -27,14 +25,17 @@ namespace ChessProject.DL.Entities
         [Range(2, 32)]
         public int MaxPlayers { get; set; }
 
+        public int CurrentPlayers { get; set; }
+
         [Range(0, 3000)]
         public int? MinElo { get; set; }
 
         [Range(0, 3000)]
         public int? MaxElo { get; set; }
 
+        public List<int>CategoryId { get; set; } = new List<int>();
 
-        public List<TournamentCategory> Categories { get; set; } = new();
+        public List<Category> Categories { get; set; } = new();
 
         public TournamentStatus Status { get; set; }
 
