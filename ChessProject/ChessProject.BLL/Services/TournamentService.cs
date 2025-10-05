@@ -128,7 +128,7 @@ namespace ChessProject.BLL.Services
                         continue;
 
                     // revenge match
-                    _tournamentRepository.CreateEncounter(tournamentId, white, black, totalRounds + round + 1);
+                    _tournamentRepository.CreateEncounter(tournamentId, black, white, totalRounds + round + 1);
                 }
 
                 // Rotate players (except the first)
