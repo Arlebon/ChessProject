@@ -134,13 +134,13 @@ namespace ChessProject.BLL.Services
 
         public void StartTournament(int id)
         {
-            Tournament? tournament = _tournamentRepository.GetOneById(id);
-
+            Tournament? tournament = GetOneById(id);
 
             if (tournament == null)
             {
                 throw new Exception("This tournament doesn't exist");
             }
+
             if (tournament.CurrentPlayers < tournament.MinPlayers)
             {
                 throw new Exception("Not enough players.");

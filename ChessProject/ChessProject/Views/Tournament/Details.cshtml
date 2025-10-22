@@ -1,6 +1,7 @@
 ﻿@using ChessProject.DL.Enums
 @using ChessProject.Extensions
 @using ChessProject.Models.Tournament
+@using System.Text.Json
 @model TournamentDetailsDTO
 
 <h1>Tournament Details</h1>
@@ -85,6 +86,7 @@
 @if (TempData["RegistrationError"] != null)
 {
 	<script>
-		alert('@TempData["RegistrationError"]')
+		const message = @Html.Raw(JsonSerializer.Serialize(TempData["RegistrationError"]))
+		alert(message)
 	</script>
 }
